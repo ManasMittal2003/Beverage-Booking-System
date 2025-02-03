@@ -166,7 +166,7 @@ if start_camera:
     selectionspeed = 10
     mode_positions = [(1136, 196), (1000, 384), (1136, 581)]
     counterpause = 0
-    selection_list = [-1, -1, -1]
+    selection_list = [-1, -1, -1]  # This stores the selections for each mode (drink, sugar level, size)
 
     # Create a placeholder for displaying the video
     video_placeholder = st.empty()
@@ -188,6 +188,7 @@ if start_camera:
             hand = hands[0]
             fingers = detector.fingersUp(hand)
 
+            # Detect selections based on fingers
             if fingers == [0, 1, 0, 0, 0]:
                 if selection != 1:
                     counter = 1
@@ -234,8 +235,12 @@ if start_camera:
         # Display result after final selection
         if Modetype >= 3:
             beverage_sizes = ["Small", "Medium", "Large"]
-            beverages = ["Latte", "Espresso", "Cappuccino"]
-            result_text = f"You selected: {beverages[selection_list[0] - 1]}, Size: {beverage_sizes[selection_list[1] - 1]}"
+            beverages = ["Latte", "Black", "Tea"]  # Update to reflect correct beverage options
+            
+            # Correct indexing to handle the selections properly
+            size_index = selection_list[2] - 1 if 0 < selection_list[2] <= len(beverage_sizes) else 0
+            result_text = f"You selected: {beverages[selection_list[0] - 1]}, Sugar Level: {selection_list[1]}, Size: {beverage_sizes[size_index]}"
+
             result_placeholder.success(result_text)
             cap.release()
             break
@@ -248,3 +253,4 @@ if start_camera:
     cap.release()
 else:
     st.write("Click 'Start Camera' to begin.")
+
